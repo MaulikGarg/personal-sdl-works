@@ -1,0 +1,59 @@
+{
+	"basic boilerplate": {
+		"prefix": "simpleBP",
+		"body": [
+			"#include<iostream>",
+			"using namespace std;",
+			"",
+			"int main()",
+			"{",
+			"\t$1",
+			"\n\treturn 0;",
+			"}"
+		],
+		"description": "has iostream and a main."
+	},
+	"string vector": {
+		"prefix": "strvecBP",
+		"body": [
+			"#include<iostream>",
+			"#include<string>",
+			"#include<string_view>",
+			"#include<vector>",
+			"using namespace std;",
+			"",
+			"int main()",
+			"{",
+			"\t$1",
+			"\n\treturn 0;",
+			"}"
+		],
+		"description": "has iostream and a main."
+	},
+	"including boilerplate": {
+		"prefix": "heavyBP",
+		"body": [
+		"#include<iostream>",
+		"#include<string>",
+		"#include<vector>",
+		"#include<algorithm>",
+		"#include<fstream>",
+		"#include<cmath>",
+		"#include<set>",
+		"#include<unordered_set>",
+		"#include<iomanip>",
+		"#include<array>",
+		"#include<cassert>",
+		"#include \"../libraries/random.h\"",
+		"",
+		"using namespace std;",
+		"",
+		"int main()",
+		"{",
+		"\t$1",
+		"\n\treturn 0;",
+		"}"
+	],
+		"description": "has basic libraries which may be needed."
+	}
+}
