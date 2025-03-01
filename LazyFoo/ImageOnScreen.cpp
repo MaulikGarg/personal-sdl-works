@@ -1,4 +1,4 @@
-#include <SDL3\SDL.h>
+#include <SDL2/SDL.h>
 
 #include <iostream>
 #include <string>
@@ -40,9 +40,9 @@ int main(int argc, char* argv[]) {
       // Hack to get window to stay up
       SDL_Event e;
       bool quit = false;
-      while (!quit) {
+      while (quit == false) {
         while (SDL_PollEvent(&e)) {
-          if (e.type == SDL_EVENT_QUIT) quit = true;
+          if (e.type == SDL_QUIT) quit = true;
         }
       }
     }
@@ -61,8 +61,9 @@ bool initialize() {
     using namespace windows;
     using namespace parameters;
     // attemp to make our window
-    mainWindow = SDL_CreateWindow("Test2", scrnWidth,
-                                  scrnHeight, 0);
+    mainWindow = SDL_CreateWindow("Test2", SDL_WINDOWPOS_UNDEFINED,
+                                  SDL_WINDOWPOS_UNDEFINED, scrnWidth,
+                                  scrnHeight, SDL_WINDOW_SHOWN);
 
     // check for window success
     if (mainWindow == NULL) {
@@ -85,7 +86,7 @@ bool loadMedia() {
 
   std::cout << "Opening file at " << basePath << '\n';
   // try to open the image
-  windows::imageFile = SDL_LoadBMP("..\\/img/test.bmp");
+  windows::imageFile = SDL_LoadBMP("..\\/Playground/test.bmp");
 
   // check if image file was loaded
   if (windows::imageFile == NULL) {
@@ -100,7 +101,7 @@ void Close() {
   using namespace windows;
 
   // de allocate surface memory
-  SDL_DestroySurface(imageFile);
+  SDL_FreeSurface(imageFile);
   imageFile = nullptr;
 
   // destroy the opened window

@@ -1,4 +1,4 @@
-#include <SDL3/SDL.h>
+#include <SDL2/SDL.h>
 
 #include <iostream>
 
@@ -20,8 +20,9 @@ int main(int argc, char* argv[]) {
   }
   // safe case if initializing success
   else {
-    window = SDL_CreateWindow("Test Window", parameters::scrnWidth,
-                              parameters::scrnHeight, 0);
+    window = SDL_CreateWindow("Test Window", SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED, parameters::scrnWidth,
+                              parameters::scrnHeight, SDL_WINDOW_SHOWN);
 
     // check if window had been created successfully
     if (window == NULL) {
@@ -32,8 +33,8 @@ int main(int argc, char* argv[]) {
       // get the surface so we cant start the drawing
       screenSurface = SDL_GetWindowSurface(window);
       // fill the surface white
-      SDL_FillSurfaceRect(screenSurface, NULL,
-                   SDL_MapRGB(SDL_GetPixelFormatDetails(screenSurface->format), NULL, 0xFA, 0xFB, 0x98));
+      SDL_FillRect(screenSurface, NULL,
+                   SDL_MapRGB(screenSurface->format, 0xFA, 0xFB, 0x98));
       // update the color fill onto the window
       SDL_UpdateWindowSurface(window);
       // keep the window up
@@ -43,10 +44,10 @@ int main(int argc, char* argv[]) {
       bool quit = false;
       while (quit == false) {
         while (SDL_PollEvent(&e)) {
-          if (e.type == SDL_EVENT_QUIT) quit = true;
+          if (e.type == SDL_QUIT) quit = true;
         }
       }
-      // hack end
+      //hack end
       //----------------
     }
   }
