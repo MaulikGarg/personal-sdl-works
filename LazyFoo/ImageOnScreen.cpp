@@ -85,7 +85,7 @@ bool loadMedia() {
 
   std::cout << "Opening file at " << basePath << '\n';
   // try to open the image
-  windows::imageFile = SDL_LoadBMP("..\\/Playground/test.bmp");
+  windows::imageFile = SDL_LoadBMP("..\\/img/test.bmp");
 
   // check if image file was loaded
   if (windows::imageFile == NULL) {
