@@ -1,4 +1,4 @@
-#include <SDL2/SDL.h>
+#include <SDL3\SDL.h>
 
 #include <iostream>
 #include <string>
@@ -40,9 +40,9 @@ int main(int argc, char* argv[]) {
       // Hack to get window to stay up
       SDL_Event e;
       bool quit = false;
-      while (quit == false) {
+      while (!quit) {
         while (SDL_PollEvent(&e)) {
-          if (e.type == SDL_QUIT) quit = true;
+          if (e.type == SDL_EVENT_QUIT) quit = true;
         }
       }
     }
@@ -61,9 +61,8 @@ bool initialize() {
     using namespace windows;
     using namespace parameters;
     // attemp to make our window
-    mainWindow = SDL_CreateWindow("Test2", SDL_WINDOWPOS_UNDEFINED,
-                                  SDL_WINDOWPOS_UNDEFINED, scrnWidth,
-                                  scrnHeight, SDL_WINDOW_SHOWN);
+    mainWindow = SDL_CreateWindow("Test2", scrnWidth,
+                                  scrnHeight, 0);
 
     // check for window success
     if (mainWindow == NULL) {
@@ -101,7 +100,7 @@ void Close() {
   using namespace windows;
 
   // de allocate surface memory
-  SDL_FreeSurface(imageFile);
+  SDL_DestroySurface(imageFile);
   imageFile = nullptr;
 
   // destroy the opened window
