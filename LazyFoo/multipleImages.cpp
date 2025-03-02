@@ -1,13 +1,13 @@
-#include <SDL3/SDL.h>
+#include <SDL2/SDL.h>
 
 #include <iostream>
 #include <string>
 #include <vector>
 
 namespace parameters {
-  constexpr int scrnWidth{800};
-  constexpr int scrnHeight{600};
-  }  // namespace parameters
+constexpr int scrnWidth{800};
+constexpr int scrnHeight{600};
+}  // namespace parameters
 
 // used to sync key press with an image
 enum keyPressImageLink {
@@ -64,11 +64,11 @@ int main(int argc, char* argv[]) {
       while (!quit) {
         while (SDL_PollEvent(&event) != 0) {
           // check if user wishes to exit the program
-          if (event.type == SDL_EVENT_QUIT) {
+          if (event.type == SDL_QUIT) {
             quit = true;
           }
           // the user presses a key
-          else if (event.type == SDL_EVENT_KEY_DOWN) {
+          else if (event.type == SDL_KEYDOWN) {
             updateImageSurf(event);
           }
           SDL_BlitSurface(windowsData::imgSurf, NULL, windowsData::mainSurf,
@@ -82,22 +82,24 @@ int main(int argc, char* argv[]) {
   return 0;
 }
 
-bool initialize(){
+bool initialize() {
   // success flag
-  bool isSuccess {false};
+  bool isSuccess{false};
 
   // attempt to initialize the VIDEO SDL
-  if(SDL_Init(SDL_INIT_VIDEO) < 0){
+  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     std::cout << "Error initializing SDL Window: " << SDL_GetError();
-  } 
+  }
   // OK, Now attempt to draw the window
   else {
     using namespace windowsData;
     using namespace parameters;
-    mainWindow = SDL_CreateWindow("UP DOWN LEFT RIGHT UWU", scrnWidth, scrnHeight, 0);
+    mainWindow =
+        SDL_CreateWindow("UP DOWN LEFT RIGHT UWU", SDL_WINDOWPOS_UNDEFINED,
+                         SDL_WINDOWPOS_UNDEFINED, scrnWidth, scrnHeight, 0);
 
     // check if window creation was success
-    if(mainWindow == NULL){
+    if (mainWindow == NULL) {
       std::cout << "Error creating window: " << SDL_GetError();
     }
     // OK, Now make main window surface
@@ -124,11 +126,10 @@ bool loadMedia() {
   // indicates if the operation is a success
   bool isSuccess{true};
 
-  std::string relativePath {"../img/"};
+  std::string relativePath{"../img/"};
   // all the file names we need
   std::vector<std::string> fileNames{
-      "3default.bmp", "3up.bmp",   "3down.bmp",
-      "3right.bmp",   "3left.bmp",
+      "3default.bmp", "3up.bmp", "3down.bmp", "3right.bmp", "3left.bmp",
   };
 
   // loads all the images and stores pointers unto the array
@@ -146,7 +147,7 @@ bool loadMedia() {
 // update the image surf based on keypress
 void updateImageSurf(const SDL_Event& event) {
   using namespace windowsData;
-  switch (event.key.key) {
+  switch (event.key.keysym.sym) {
     case SDLK_UP:
       imgSurf = keyPressImg[keyPressLink_up];
       break;
@@ -165,22 +166,22 @@ void updateImageSurf(const SDL_Event& event) {
   }
 }
 
-void close(){
+void close() {
   using namespace windowsData;
 
-  //deallocate surface memory
+  // deallocate surface memory
   imgSurf = nullptr;
 
   // free all the images
-  for(size_t i = 0; i < keyPressLink_max; i++){
-    SDL_DestroySurface(keyPressImg[i]);
+  for (size_t i = 0; i < keyPressLink_max; i++) {
+    SDL_FreeSurface(keyPressImg[i]);
     keyPressImg[i] = nullptr;
   }
 
   // delete the main window
   SDL_DestroyWindow(mainWindow);
   mainWindow = nullptr;
-  
+
   // close the SDL
   SDL_Quit();
 }

@@ -1,11 +1,11 @@
-#include <SDL3\SDL.h>
+#include <SDL2\SDL.h>
 
 #include <iostream>
 #include <string>
 
 namespace parameters {
-constexpr int scrnWidth{1000};
-constexpr int scrnHeight{1000};
+constexpr int scrnWidth{600};
+constexpr int scrnHeight{800};
 }  // namespace parameters
 
 namespace windows {
@@ -37,10 +37,11 @@ int main(int argc, char* argv[]) {
     } else {
       using namespace windows;
       // initialize the stretched rectangle at (0,0) with dimensions of window
-      SDL_Rect stretchRectangle{0,0,parameters::scrnWidth,parameters::scrnHeight};
-      
+      SDL_Rect stretchRectangle{0, 0, parameters::scrnWidth,
+                                parameters::scrnHeight};
+
       // stretch the image
-      SDL_BlitSurfaceScaled(imageFile, NULL, windowSurface, &stretchRectangle, SDL_SCALEMODE_NEAREST);
+      SDL_BlitScaled(imageFile, NULL, windowSurface, &stretchRectangle);
       SDL_UpdateWindowSurface(mainWindow);
 
       // Hack to get window to stay up
@@ -48,7 +49,7 @@ int main(int argc, char* argv[]) {
       bool quit = false;
       while (!quit) {
         while (SDL_PollEvent(&e)) {
-          if (e.type == SDL_EVENT_QUIT) quit = true;
+          if (e.type == SDL_QUIT) quit = true;
         }
       }
     }
@@ -67,8 +68,8 @@ bool initialize() {
     using namespace windows;
     using namespace parameters;
     // attemp to make our window
-    mainWindow = SDL_CreateWindow("Test2", scrnWidth,
-                                  scrnHeight, 0);
+    mainWindow = SDL_CreateWindow("Test2", SDL_WINDOWPOS_UNDEFINED,
+                                  SDL_WINDOWPOS_UNDEFINED, scrnWidth, scrnHeight, 0);
 
     // check for window success
     if (mainWindow == NULL) {
@@ -88,7 +89,7 @@ bool loadMedia() {
 
   windows::imageFile = loadSurface("../img/t_border.bmp");
 
-  if(windows::imageFile == NULL){
+  if (windows::imageFile == NULL) {
     std::cout << '\n' << SDL_GetError();
     isSuccess = false;
   }
@@ -100,7 +101,7 @@ void Close() {
   using namespace windows;
 
   // de allocate surface memory
-  SDL_DestroySurface(imageFile);
+  SDL_FreeSurface(imageFile);
   imageFile = nullptr;
 
   // destroy the opened window
@@ -121,13 +122,10 @@ SDL_Surface* loadSurface(std::string filename) {
   }
 
   // convert the loaded img to screensurface format to avoid redundant blitting
-  optimizedSurface = SDL_ConvertSurface(img, windows::windowSurface->format);
+  optimizedSurface = SDL_ConvertSurface(img, windows::windowSurface->format, 0);
 
   // delete the unoptimized surface
-  SDL_DestroySurface(img);
+  SDL_FreeSurface(img);
 
   return optimizedSurface;
 }
-
-
-
