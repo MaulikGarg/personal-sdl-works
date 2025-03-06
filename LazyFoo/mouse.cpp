@@ -144,41 +144,41 @@ int main(int argc, char* argv[]) {
   SDL_RendererFlip flipType{SDL_FLIP_NONE};
 
   // position
-  int x{};
-  int y{};
+  int x{parameters::width / 2 - 80};
+  int y{parameters::height / 2 - 80};
 
   while (!quit) {
     using namespace data;
+    SDL_Rect* current{&sprites[frame / 4]};
     while (SDL_PollEvent(&event) != 0) {
       if (event.type == SDL_QUIT) quit = true;
-      // SDL_Rect* current{&sprites[frame / 4]};
-      // animation.render(x, y, current, degrees, nullptr, flipType);
-      // text.render(x + 80, y + 80, nullptr, degrees, nullptr, SDL_FLIP_NONE);
 
-      // if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEWHEEL)
-      // {
-      //   mouseEventHandler(event, degrees, flipType);
-      // }
+      if (event.type == SDL_MOUSEBUTTONDOWN || event.type == SDL_MOUSEWHEEL) {
+        mouseEventHandler(event, degrees, flipType);
+      }
 
-      // if (event.type == SDL_KEYDOWN) {
-      //   keyEventHandle(event, x, y);
-      // }
+      if (event.type == SDL_KEYDOWN) {
+        keyEventHandle(event, x, y);
+      }
 
-      // if (event.type == SDL_MOUSEMOTION) {
-      //   frame++;
-      //   if (frame / 4 >= totalFrames) frame = 0;
-      // }
       for (int i{0}; i < parameters::buttonCount; i++) {
         buttons[i].handleEvent(&event);
       }
     }
+
     SDL_SetRenderDrawColor(mainRenderer, 0xff, 0xff, 0xff, 0xff);
     SDL_RenderClear(mainRenderer);
+
+    animation.render(x, y, current, degrees, nullptr, flipType);
+    text.render(x + 80, y + 80, nullptr, degrees, nullptr, SDL_FLIP_NONE);
 
     for (int i{0}; i < parameters::buttonCount; i++) {
       buttons[i].render();
     }
+
     SDL_RenderPresent(mainRenderer);
+    frame++;
+    if (frame / 4 >= totalFrames) frame = 0;
   }
 
   close();
