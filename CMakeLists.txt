@@ -9,11 +9,9 @@ set(SOURCES Playground/test.cpp)
 
 # Find SDL2
 find_package(SDL2 REQUIRED)
+find_package(SDL2_mixer REQUIRED)
 find_package(SDL2_ttf REQUIRED)
-
-# Manually specify SDL2_image paths
-set(SDL2_IMAGE_INCLUDE_DIRS "C:/msys64/ucrt64/include/SDL2")
-set(SDL2_IMAGE_LIBRARIES "C:/msys64/ucrt64/lib/libSDL2_image.dll.a")
+find_package(SDL2_image REQUIRED)
 
 # Create the executable
 add_executable(${PROJECT_NAME} ${SOURCES})
@@ -21,15 +19,17 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Use target-specific include directories
 target_include_directories(${PROJECT_NAME} PRIVATE 
         ${SDL2_INCLUDE_DIRS} 
-        ${SDL2_IMAGE_INCLUDE_DIRS} 
+        ${SDL2_image_INCLUDE_DIRS} 
         ${SDL2_ttf_INCLUDE_DIRS}
+        ${SDL2_mixer_INCLUDE_DIRS}
     )
 
 # Link SDL2 libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE 
         ${SDL2_LIBRARIES} 
-        ${SDL2_IMAGE_LIBRARIES}
+        ${SDL2_image_LIBRARIES}
         ${SDL2_ttf_LIBRARIES}
+        ${SDL2_mixer_LIBRARIES}
     )
 
 # MinGW-specific linking
@@ -40,6 +40,7 @@ if(MINGW)
         SDL2::SDL2main 
         SDL2::SDL2 
         -lSDL2_image
-        -lSDL2_ttf)
+        -lSDL2_ttf
+        -lSDL2_mixer)
 
 endif()
